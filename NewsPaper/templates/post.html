@@ -1,0 +1,13 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Новость
+{% endblock title %}
+
+{% block content %}
+{{ post.topic|censor }}
+{{ post.creation_time|date:'d M Y' }}
+{{ post.text|censor }}
+{% endblock content %}
