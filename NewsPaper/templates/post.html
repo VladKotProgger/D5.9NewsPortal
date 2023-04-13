@@ -10,4 +10,17 @@
 {{ post.topic|censor }}
 {{ post.creation_time|date:'d M Y' }}
 {{ post.text|censor }}
+
+<script>
+document.getElementById('deleteId').href = windows.location.href;
+</script>
+
+<h4>
+    <a href="edit/" id="deleteId" class="button">Изменить</a>
+</h4>
+
+<h4>
+    <a href="delete/" id="deleteId" class="button">Удалить</a>
+</h4>
+
 {% endblock content %}

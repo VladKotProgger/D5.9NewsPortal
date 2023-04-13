@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 
 article = 'STA'
 news = 'NOV'
@@ -32,9 +33,15 @@ class Author(models.Model):
         self.author_rating = post_rate + comment_rate
         self.save()
 
+    def __str__(self):
+        return self.user.username
+
 
 class Category(models.Model):
     subject = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.subject
 
 
 class Post(models.Model):
@@ -63,6 +70,9 @@ class Post(models.Model):
             return self.text
         else:
             return self.text[:124] + '...'
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
 
 
 class PostCategory(models.Model):
