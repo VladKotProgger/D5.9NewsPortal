@@ -53,7 +53,7 @@ class NewsCreate(CreateView):
         return super().form_valid(form)
 
 
-class NewsEdit(UpdateView):
+class NewsEdit(LoginRequiredMixin, UpdateView):
     form_class = ArticleNewsForm
     model = Post
     template_name = 'post_create_edit.html'
@@ -64,9 +64,6 @@ class NewsEdit(UpdateView):
             return HttpResponse('Такой статьи не существует')
         post.save()
         return super().form_valid(form)
-
-    class ProtectedView(LoginRequiredMixin, TemplateView):
-        template_name = 'post_create_edit.html'
 
 
 class ArticleCreate(CreateView):
@@ -80,7 +77,7 @@ class ArticleCreate(CreateView):
         return super().form_valid(form)
 
 
-class ArticleEdit(UpdateView):
+class ArticleEdit(LoginRequiredMixin, UpdateView):
     form_class = ArticleNewsForm
     model = Post
     template_name = 'article_create_edit.html'
@@ -91,9 +88,6 @@ class ArticleEdit(UpdateView):
             return HttpResponse('Такой новости не существует')
         post.save()
         return super().form_valid(form)
-
-    class ProtectedView(LoginRequiredMixin, TemplateView):
-        template_name = 'article_create_edit.html'
 
 
 def PostDelete(request, pk):
