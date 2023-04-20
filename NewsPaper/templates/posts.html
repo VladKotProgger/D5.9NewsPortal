@@ -8,10 +8,14 @@
 {% endblock title %}
 
 {% block content %}
+{% if is_not_author %}
+<button> <a href="news/upgrade/"> Стать автором!</a> </button>
+{% endif %}
     <h1>Все новости</h1>
     <form action="" method="get">
         {{ filterset.form.as_p }}
         <input type="submit" value="Найти" />
+
     </form>
 
     <h3>{{ posts|length }}</h3>
@@ -36,6 +40,7 @@
     {% else %}
         <h2>Публикаций нет!</h2>
     {% endif %}
+
    {% if page_obj.has_previous %}
        <a href="?{% url_replace page=1 %}">1</a>
        {% if page_obj.previous_page_number != 1 %}
