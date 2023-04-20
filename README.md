@@ -1,2 +1,2 @@
-# D6.3NewsPortal
+# NewsPortal
 News Portal
