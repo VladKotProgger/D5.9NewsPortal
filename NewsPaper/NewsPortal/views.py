@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
@@ -6,11 +7,14 @@ from django.shortcuts import render
 from datetime import datetime
 
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
 from .filters import PostFilter
 from .forms import ArticleNewsForm
 from .models import Post
+from django.contrib.auth.models import User
+from .models import BaseRegisterForm
+from django.contrib.auth.decorators import login_required
 
 
 class PostsList(ListView):
@@ -60,6 +64,9 @@ class NewsEdit(UpdateView):
         post.save()
         return super().form_valid(form)
 
+    class ProtectedView(LoginRequiredMixin, TemplateView):
+        template_name = 'post_create_edit.html'
+
 
 class ArticleCreate(CreateView):
     form_class = ArticleNewsForm
@@ -84,8 +91,17 @@ class ArticleEdit(UpdateView):
         post.save()
         return super().form_valid(form)
 
+    class ProtectedView(LoginRequiredMixin, TemplateView):
+        template_name = 'article_create_edit.html'
+
 
 def PostDelete(request, pk):
     article = Post.objects.get(id=pk)
     article.delete()
     return HttpResponseRedirect(reverse('post_list'))
+
+
+class BaseRegisterView(CreateView):
+    model = User
+    form_class = BaseRegisterForm
+    success_url = '/news'
