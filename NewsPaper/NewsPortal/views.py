@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 
@@ -42,7 +42,8 @@ class PostDetail(DetailView):
     context_object_name = 'post'
 
 
-class NewsCreate(CreateView):
+class NewsCreate(PermissionRequiredMixin, CreateView):
+    permission_required = 'NewsPortal.add_post'
     form_class = ArticleNewsForm
     model = Post
     template_name = 'post_create_edit.html'
@@ -53,7 +54,8 @@ class NewsCreate(CreateView):
         return super().form_valid(form)
 
 
-class NewsEdit(LoginRequiredMixin, UpdateView):
+class NewsEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'NewsPortal.change_post'
     form_class = ArticleNewsForm
     model = Post
     template_name = 'post_create_edit.html'
@@ -66,7 +68,8 @@ class NewsEdit(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class ArticleCreate(CreateView):
+class ArticleCreate(PermissionRequiredMixin, CreateView):
+    permission_required = 'NewsPortal.add_post'
     form_class = ArticleNewsForm
     model = Post
     template_name = 'article_create_edit.html'
@@ -77,7 +80,8 @@ class ArticleCreate(CreateView):
         return super().form_valid(form)
 
 
-class ArticleEdit(LoginRequiredMixin, UpdateView):
+class ArticleEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'NewsPortal.change_post'
     form_class = ArticleNewsForm
     model = Post
     template_name = 'article_create_edit.html'
