@@ -20,7 +20,7 @@
 
     <h3>{{ posts|length }}</h3>
     <hr>
-    {% if posts %}
+    {% if category_news_list %}
         <table>
             <tr>
                 <td>Заголовок</td>
@@ -30,7 +30,7 @@
 
             </tr>
 
-            {% for post in posts %}
+            {% for post in category_news_list %}
             <tr>
                 <td>{{ post.topic|censor }}</td>
                 <td>{{ post.creation_time|date:'d M Y' }}</td>
