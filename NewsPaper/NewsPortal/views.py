@@ -112,10 +112,10 @@ def upgrade_me(request):
     premium_group = Group.objects.get(name='authors')
     if not request.user.groups.filter(name='authors').exists():
         premium_group.user_set.add(user)
-    return redirect('news/')
+    return redirect('profile')
 
 
-class IndexView(LoginRequiredMixin, TemplateView):
+class IndexView(TemplateView):
     template_name = 'posts.html'
 
     def get_context_data(self, **kwargs):
@@ -124,14 +124,14 @@ class IndexView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class CategoryListView(PostsList):
+class CategoryListView(ListView):
     model = Post
-    template_name = 'templates/category_list.html'
+    template_name = 'category_list.html'
     context_object_name = 'category_news_list'
 
     def get_queryset(self):
         self.category = get_object_or_404(Category, id=self.kwargs['pk'])
-        queryset = Post.objects.filter(category=self.category).order_by('-created_at')
+        queryset = Post.objects.filter(post_category=self.category).order_by('-creation_time')
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -148,4 +148,21 @@ def subscribe(request, pk):
     category.subscribers.add(user)
 
     message = 'Вы успешно подписались на рассылку новостей категории'
-    return render(request, 'templates/subscribe.html', {'category': category, 'message': message})
+    return render(request, 'subscribe.html', {'category': category, 'message': message})
+
+
+@login_required
+def unsubscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subscribers.remove(user)
+
+    message = 'Вы успешно отписались от рассылки новостей категории'
+    return render(request, 'unsubscribe.html', {'category': category, 'message': message})
+
+
+def profile(request):
+    context = {
+        'is_not_author': not request.user.groups.filter(name='authors').exists()
+    }
+    return HttpResponse(render(request, 'profile.html', context))

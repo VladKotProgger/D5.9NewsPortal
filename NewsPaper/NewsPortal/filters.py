@@ -1,19 +1,26 @@
 import django_filters
 from django.forms import DateInput
-from django_filters import FilterSet, DateFilter
-from .models import Post
+from django_filters import FilterSet, DateFilter, CharFilter, ModelChoiceFilter
+from .models import *
 
 
 class PostFilter(FilterSet):
-    creation_time = DateFilter(
-        widget=DateInput(attrs={'type': 'date'}),
-        label='Дата позже',
-        lookup_expr='date__gt'
+    search_title = CharFilter(
+        field_name='topic',
+        label='Заголовок',
+        lookup_expr='icontains'
     )
 
-    class Meta:
-        model = Post
-        fields = {
-            'topic': ['icontains'],
-            'post_author__user__username': ['icontains'],
-        }
+    search_author = ModelChoiceFilter(
+        empty_label='Все авторы',
+        field_name='post_author',
+        label='Автор',
+        queryset=Author.objects.all()
+    )
+
+    post_date = DateFilter(
+        field_name='creation_time',
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        label='Дата',
+        lookup_expr='date__gte'
+    )

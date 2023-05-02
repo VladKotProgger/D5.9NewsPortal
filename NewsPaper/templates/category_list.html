@@ -8,26 +8,21 @@
 {% endblock title %}
 
 {% block content %}
-{% if is_not_author %}
-<button> <a href="upgrade/"> Стать автором!</a> </button>
+{% if is_not_subscriber %}
+<button style="margin: 10px"> <a href="{% url 'subscribe' category.id %}"> Подписаться на категорию {{ category }}</a> </button>
+{% else %}
+<button style="margin: 10px"> <a href="{% url 'unsubscribe' category.id %}"> Отписаться от категории {{ category }}</a> </button>
 {% endif %}
-    <h1>Все новости</h1>
-    <form action="" method="get">
-        {{ filterset.form.as_p }}
-        <input type="submit" value="Найти" />
-
-    </form>
-
-    <h3>{{ posts|length }}</h3>
+    <h1>Все публикации в категории {{ category }}</h1>
     <hr>
     {% if category_news_list %}
         <table>
             <tr>
                 <td>Заголовок</td>
-                <td>Категории</td>
                 <td>Дата публикации</td>
-                <td>Статья</td>
-
+                <td>Текст публикации</td>
+                <td>Категории</td>
+                <td>Тип</td>
             </tr>
 
             {% for post in category_news_list %}
@@ -35,12 +30,13 @@
                 <td>{{ post.topic|censor }}</td>
                 <td>{{ post.creation_time|date:'d M Y' }}</td>
                 <td>{{ post.text|censor|truncatechars:21 }}</td>
-            </tr>
-            <td>
-                {% for category in post.category.all %}
+                <td>
+                {% for category in post.post_category.all %}
                     <a href="{% url 'category_list' category.id %}">{{ category }}</a>
                 {% endfor %}
-            </td>
+                </td>
+                <td>{{ post.get_article_news_display }}</td>
+            </tr>
         {% endfor %}
         </table>
 

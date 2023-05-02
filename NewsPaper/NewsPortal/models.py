@@ -1,3 +1,4 @@
+from allauth.account.forms import SignupForm
 from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
 from django.db import models
@@ -122,6 +123,15 @@ class BaseRegisterForm(UserCreationForm):
 
     def save(self, *args, **kwargs):
         user = super(BaseRegisterForm, self).save(*args, **kwargs)
+        common_group = Group.objects.get(name='common')
+        common_group.user_set.add(user)
+        return user
+
+
+class CommonSignupForm(SignupForm):
+
+    def save(self, request):
+        user = super(CommonSignupForm, self).save(request)
         common_group = Group.objects.get(name='common')
         common_group.user_set.add(user)
         return user
