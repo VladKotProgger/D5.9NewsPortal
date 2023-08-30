@@ -1,12 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
-
 # Create your views here.
 
-from datetime import datetime
-
 from django.urls import reverse_lazy, reverse
+from django.views import View
+
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
 from .filters import PostFilter
@@ -16,7 +15,7 @@ from django.contrib.auth.models import User, Group
 from .models import BaseRegisterForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
-
+from .tasks import hello
 
 class PostsList(ListView):
     model = Post

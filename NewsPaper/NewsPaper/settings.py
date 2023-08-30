@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
@@ -151,12 +153,23 @@ ACCOUNT_FORMS = {'signup': 'NewsPortal.forms.BasicSignupForm'}
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_HOST = 'smtp.yandex.com'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_SSL = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 SERVER_EMAIL = os.getenv('SERVER_EMAIL')
 
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
+CELERY_BROKER_URL = 'redis://:12345@127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://:12345@127.0.0.1:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
