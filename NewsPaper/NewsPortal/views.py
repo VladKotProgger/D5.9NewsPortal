@@ -4,7 +4,6 @@ from django.shortcuts import render, get_object_or_404
 # Create your views here.
 
 from django.urls import reverse_lazy, reverse
-from django.views import View
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
@@ -15,7 +14,8 @@ from django.contrib.auth.models import User, Group
 from .models import BaseRegisterForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
-from .tasks import hello
+from django.core.cache import cache
+
 
 class PostsList(ListView):
     model = Post
@@ -39,6 +39,16 @@ class PostDetail(DetailView):
     model = Post
     template_name = 'post.html'
     context_object_name = 'post'
+    queryset = Post.objects.all()
+
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+
+        return obj
 
 
 class NewsCreate(PermissionRequiredMixin, CreateView):

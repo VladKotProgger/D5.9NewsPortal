@@ -2,6 +2,7 @@
 {% load crispy_forms_filters %}
 {% load custom_filters %}
 {% load custom_tags %}
+{% load cache %}
 
 {% block title %}
 Новости
@@ -11,11 +12,15 @@
 
     <h1>Все новости</h1>
 
+{% cache 60 buttons %}
+
 <button> <a href="upgrade/"> Стать автором!</a> </button>
 
     <form action="" method="get">
         {{ filterset.form|crispy }}
         <input style="margin: 10px" type="submit" value="Найти" />
+
+{% endcache %}
 
     </form>
 

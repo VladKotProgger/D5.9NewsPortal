@@ -15,7 +15,7 @@ from NewsPortal.models import Post, Category
 logger = logging.getLogger(__name__)
 
 
-# наша задача по выводу текста на экран
+# задача по выводу текста на экран
 def my_job():
     today = datetime.datetime.now()
     last_week = today - datetime.timedelta(days=7)

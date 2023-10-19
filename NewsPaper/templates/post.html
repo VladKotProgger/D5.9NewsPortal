@@ -1,6 +1,7 @@
 {% extends 'flatpages/default.html' %}
 
 {% load custom_filters %}
+{% load cache %}
 
 {% block title %}
 Новость
@@ -15,6 +16,8 @@
 document.getElementById('deleteId').href = windows.location.href;
 </script>
 
+{% cache 300 buttons %}
+
 <h4>
     <a href="edit/" id="deleteId" class="button">Изменить</a>
 </h4>
@@ -22,5 +25,7 @@ document.getElementById('deleteId').href = windows.location.href;
 <h4>
     <a href="delete/" id="deleteId" class="button">Удалить</a>
 </h4>
+
+{% endcache %}
 
 {% endblock content %}
